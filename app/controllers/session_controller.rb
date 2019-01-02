@@ -38,7 +38,7 @@ class SessionController < ApplicationController
     elsif user.merchant?
       redirect_to dashboard_path
     elsif user.admin?
-      redirect_to admin_dashboard_index_path
+      redirect_to root_path
     end
   end
 end

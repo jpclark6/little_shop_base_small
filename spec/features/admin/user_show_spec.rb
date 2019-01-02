@@ -24,6 +24,7 @@ RSpec.describe 'Admin User Show workflow', type: :feature do
         expect(page).to have_content("#{@user_1.city}, #{@user_1.state} #{@user_1.zip}")
       end
       expect(page).to have_link('Edit Profile')
+      expect(page).to have_link('Orders')
     end
     it 'allows admin to edit a user profile' do
       visit admin_user_path(@user_1)
