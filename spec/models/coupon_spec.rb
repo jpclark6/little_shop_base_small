@@ -9,6 +9,6 @@ RSpec.describe Coupon, type: :model do
   end
   describe 'relationships' do
     it { should belong_to :user }
-    it { should have_one :order }
+    it { should belong_to :order }
   end
 end
