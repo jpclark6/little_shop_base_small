@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   post '/login', to: 'session#create'
   get '/logout', to: 'session#destroy'
 
+  post '/coupon', to: 'coupon#create'
+
   get '/register', to: 'users#new', as: 'registration'
   resources :users, only: [:create, :update]
 

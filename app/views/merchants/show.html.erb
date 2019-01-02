@@ -32,6 +32,11 @@
   <% end %>
 <% end %>
 
+<%= tag.div id: 'coupons' do %>
+  <h4>Create and Manage Coupons</h4>
+  <%= button_to 'Generate 10% Off Coupon', coupon_path %>
+<% end %>
+
 <%= tag.div id: 'statistics' do %>
   <%= tag.div id: 'top-5-items' do %>
     <h4>Top 5 items sold by quantity</h4>
