@@ -10,9 +10,9 @@ describe 'as a user' do
     @merchant_1 = create(:merchant, email: @merchant_email, password: @password)
     @merchant_2 = create(:merchant, email: @merchant_email_2, password: @password)
 
-    @item_1 = create(:item, user: @merchant_1, price: 10)
-    @item_2 = create(:item, user: @merchant_1, price: 30)
-    @item_3 = create(:item, user: @merchant_2, price: 5)
+    @item_1 = create(:item, user: @merchant_1, price: 10.0)
+    @item_2 = create(:item, user: @merchant_1, price: 30.0)
+    @item_3 = create(:item, user: @merchant_2, price: 5.0)
 
     visit login_path
     fill_in :email, with: @merchant_email
@@ -38,8 +38,6 @@ describe 'as a user' do
     click_on @item_3.name
     click_button 'Add to Cart'
     click_on 'Cart:'
-
-
   end
 
   it 'can use a 10% off coupon to check out adding many items' do
@@ -60,9 +58,16 @@ describe 'as a user' do
     visit cart_path
 
     valid_items = @item_1.price * 2 + @item_2.price
-    total = valid_items - 0.1 * valid_items + @item_3.price
+    total = valid_items.to_f - 0.1 * valid_items + @item_3.price
     expect(page).to have_content("Total after discount: $#{total}")
 
+    click_button 'Check out'
+    click_on 'Orders'
+    order = Order.last
+
+    within("#order-#{order.id}") do
+      expect(page).to have_content("Total Cost: $#{total}")
+    end
   end
   it 'can also generate and use 20% off coupons' do
     click_on 'Log out'
@@ -96,8 +101,14 @@ describe 'as a user' do
     expect(page).to have_content('coupon applied')
 
     valid_items = @item_1.price + @item_2.price
-    total = valid_items - 0.2 * valid_items + @item_3.price
+    total = valid_items.to_f - 0.2 * valid_items + @item_3.price
     expect(page).to have_content("Total after discount: $#{total}")
+    click_button 'Check out'
+    click_on 'Orders'
+    order = Order.last
+    within("#order-#{order.id}") do
+      expect(page).to have_content("Total Cost: $#{total}")
+    end
   end
   it 'cannot enter another coupon after it is entered' do
     fill_in :coupon_code, with: @coupon_1.code
@@ -111,7 +122,7 @@ describe 'as a user' do
 
     expect(@coupon_1.status).to eq('Active')
     click_button 'Check out'
-    @coupon_1 = Coupon.find_by(code: @coupon_1.code)
+    @coupon_1 = Coupon.find(@coupon_1.id)
     expect(@coupon_1.status).to eq('Used')
   end
   it 'a used coupon cannot be used again' do

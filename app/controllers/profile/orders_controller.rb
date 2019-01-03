@@ -7,19 +7,24 @@ class Profile::OrdersController < ApplicationController
 
   def create
     coupon = Coupon.find_by(code: session[:coupon_code])
-    if coupon.status == 'Active'
+    if coupon && coupon.status == 'Active'
       discount = coupon.discount
       coupons = coupon
       coupon.update(status: 'Used')
+      order = Order.create(user: current_user, status: :pending, coupons: [coupons])
     else
       discount = 0
-      coupons = []
+      order = Order.create(user: current_user, status: :pending)
     end
-    order = Order.create(user: current_user, status: :pending, coupons: [coupons])
     @cart.items.each do |item|
+      if coupon && item.merchant_id == coupon.user_id
+        price = item.price - item.price * discount
+      else
+        price = item.price
+      end
       order.order_items.create!(
         item: item,
-        price: item.price - item.price * discount,
+        price: price,
         quantity: @cart.count_of(item.id),
         fulfilled: false)
     end

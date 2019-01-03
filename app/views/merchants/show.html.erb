@@ -36,12 +36,15 @@
   <h4>Create and Manage Coupons</h4>
   <%= button_to 'Generate 10% Off Coupon', coupon_path(coupon: '10% off order') %>
   <%= button_to 'Generate 20% Off Coupon', coupon_path(coupon: '20% off order') %>
-  <%= tag.ul do %>
-    <% @coupons.each do |coupon| %>
-      <%= tag.div id: "coupon-#{coupon.id}" do %>
-        <li>Code <b><%= coupon.code %></b> for <b><%= coupon.coupon_type %></b> is <b><%= coupon.status %></b></li>
-        <% if coupon.status == 'Active' %>
-          <%= button_to 'Cancel coupon', cancel_coupon_path(coupon), method: :delete %>
+  <% if @coupons %>
+    <h5>Coupons</h5>
+    <%= tag.ul do %>
+      <% @coupons.each do |coupon| %>
+        <%= tag.div id: "coupon-#{coupon.id}" do %>
+          <li>Code <b><%= coupon.code %></b> for <b><%= coupon.coupon_type %></b> is <b><%= coupon.status %></b></li>
+          <% if coupon.status == 'Active' %>
+            <%= button_to 'Cancel coupon', cancel_coupon_path(coupon), method: :delete %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>

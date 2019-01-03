@@ -53,7 +53,7 @@ RSpec.describe 'Profile Orders page', type: :feature do
           expect(page).to have_content("Last Update: #{@order.last_update}")
           expect(page).to have_content("Status: #{@order.status}")
           expect(page).to have_content("Item Count: #{@order.total_item_count}")
-          expect(page).to have_content("Total Cost: #{@order.total_cost}")
+          expect(page).to have_content("Total Cost: $#{@order.total_cost}")
         end
       end
     end
