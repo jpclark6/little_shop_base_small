@@ -5,16 +5,17 @@ class CartController < ApplicationController
 
   def index
     @items = @cart.items
+    @coupon = Coupon.find_by(code: session[:coupon_code])
   end
 
   def update
     coupon_code = params["coupon_code"]
     session[:coupon_code] = coupon_code
-    @coupon = Coupon.find_by(code: coupon_code)
-    if @coupon
-      case @coupon.status
+    coupon = Coupon.find_by(code: coupon_code)
+    if coupon
+      case coupon.status
       when 'Active'
-        flash[:coupon] = "#{@coupon.coupon_type} coupon applied successfully"
+        flash[:coupon] = "#{coupon.coupon_type} coupon applied successfully"
       when 'Used'
         flash[:coupon] = "Coupon has already been used"
       when 'Cancelled'

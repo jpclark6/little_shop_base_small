@@ -53,13 +53,14 @@ describe 'as a user' do
     visit '/items'
     click_on @item_1.name
     click_button 'Add to Cart'
+    visit cart_path
 
     valid_items = @item_1.price * 2 + @item_2.price
     total = valid_items - 0.1 * valid_items + @item_3.price
     expect(page).to have_content("Total: $#{total}")
   end
-  it 'no one else can use coupon after someone checks out using coupon' do
-  end
+  # it 'no one else can use coupon after someone checks out using coupon' do
+  # end
 end
 
 # a7d920
