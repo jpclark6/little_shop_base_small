@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   delete '/cart', to: 'cart#destroy', as: 'cart_empty'
   delete '/cart/item/:id', to: 'cart#remove_more_item', as: 'cart_remove_more_item'
   delete '/cart/item/:id/all', to: 'cart#remove_all_of_item', as: 'cart_remove_item_all'
+  patch '/cart', to: 'cart#update'
 
   get '/login', to: 'session#new'
   post '/login', to: 'session#create'

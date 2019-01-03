@@ -12,8 +12,6 @@ describe 'as a merchant on my dashboard' do
     fill_in :email, with: @merchant_email
     fill_in :password, with: @password
     click_button 'Log in'
-
-    @merchant = create(:merchant)
   end
 
   it 'can generate a one time use coupon code' do
@@ -21,6 +19,16 @@ describe 'as a merchant on my dashboard' do
     click_on 'Generate 10% Off Coupon'
 
     expect(current_path).to eq(dashboard_path)
+    coupon = Coupon.last
+
+    within(".alert") do
+      expect(page).to have_content("10% off order coupon code: #{coupon.code}")
+    end
+    within("#coupon-#{coupon.id}") do
+      expect(page).to have_content(coupon.code)
+      expect(page).to have_content("Active")
+    end
+    click_on 'Generate 10% Off Coupon'
     coupon = Coupon.last
 
     within(".alert") do

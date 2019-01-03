@@ -38,7 +38,7 @@
   <%= tag.ul do %>
     <% @coupons.each do |coupon| %>
       <%= tag.div id: "coupon-#{coupon.id}" do %>
-        <li>Code <%= coupon.code %> for <%= coupon.coupon_type %> is <%= coupon.status %></li>
+        <li>Code <b><%= coupon.code %></b> for <b><%= coupon.coupon_type %></b> is <b><%= coupon.status %></b></li>
       <% end %>
     <% end %>
   <% end %>
