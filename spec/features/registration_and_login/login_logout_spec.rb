@@ -37,7 +37,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
         expect(current_path).to eq(dashboard_path)
         expect(page).to have_content('You are already logged in')
       end
-      scenario 'regular users go to profile page' do
+      scenario 'admin users go to home page' do
         create(:admin, email:'a@b.com', password: 'password')
 
         visit login_path
@@ -46,11 +46,11 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
         fill_in :password, with: 'password'
         click_button 'Log in'
 
-        expect(current_path).to eq(admin_dashboard_index_path)
+        expect(current_path).to eq(root_path)
         expect(page).to have_content('You are logged in')
 
         visit login_path
-        expect(current_path).to eq(admin_dashboard_index_path)
+        expect(current_path).to eq(root_path)
         expect(page).to have_content('You are already logged in')
       end
     end

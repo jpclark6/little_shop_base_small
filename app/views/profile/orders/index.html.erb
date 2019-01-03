@@ -11,7 +11,7 @@ You have no orders yet
       <p>Last Update: <%= order.last_update %></p>
       <p>Status: <%= order.status %></p>
       <p>Item Count: <%= order.total_item_count %></p>
-      <p>Total Cost: <%= order.total_cost %></p>
+      <p>Total Cost: <%= number_to_currency(order.total_cost) %></p>
     <% end %>
   </div>
   </div>

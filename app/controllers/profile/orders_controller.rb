@@ -5,16 +5,35 @@ class Profile::OrdersController < ApplicationController
     @orders = current_user.orders
   end
 
+  def valid_coupon?(coupon)
+    coupon && coupon.status == 'Active'
+  end
+
   def create
-    order = Order.create(user: current_user, status: :pending)
+    coupon = Coupon.find_by(code: session[:coupon_code])
+    if valid_coupon?(coupon)
+      discount = coupon.discount
+      coupons = coupon
+      coupon.update(status: 'Used')
+      order = Order.create(user: current_user, status: :pending, coupons: [coupons])
+    else
+      discount = 0
+      order = Order.create(user: current_user, status: :pending)
+    end
     @cart.items.each do |item|
+      if coupon && item.merchant_id == coupon.user_id
+        price = item.price - item.price * discount
+      else
+        price = item.price
+      end
       order.order_items.create!(
         item: item,
-        price: item.price,
+        price: price,
         quantity: @cart.count_of(item.id),
         fulfilled: false)
     end
     session[:cart] = nil
+    session[:coupon_code] = nil
     @cart = Cart.new({})
     flash[:success] = "You have successfully checked out!"
 

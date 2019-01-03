@@ -43,4 +43,20 @@ class Cart
       subtotal(item_id)
     end.sum
   end
+
+  def apply_coupon(coupon)
+    qualifying_amount = 0
+    if coupon && coupon.status == 'Active'
+      qualifying_amount = @contents.keys.reduce(0) do |sum, item_id|
+        if Item.find(item_id).merchant_id == coupon.user_id
+          sum += subtotal(item_id)
+        end
+        sum
+      end
+    else
+      qualifying_amount = 0
+    end
+    discount = qualifying_amount * coupon.discount
+    return discount
+  end
 end

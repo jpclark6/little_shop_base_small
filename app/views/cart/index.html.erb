@@ -1,8 +1,13 @@
 <% if @cart.contents.empty? %>
   <p>Your cart is empty</p>
 <% else %>
-  Total: <%= number_to_currency(@cart.grand_total) %>
-
+  <% if @coupon && @coupon.status == 'Active' %>
+    <h4>Total before discount: <%= number_to_currency(@cart.grand_total) %></h4>
+    <h4>Discount: - <%= number_to_currency(@cart.apply_coupon(@coupon)) %></h4>
+    <h4>Total after discount: <%= number_to_currency(@cart.grand_total - @cart.apply_coupon(@coupon)) %></h4>
+  <% else %>
+    Total: <%= number_to_currency(@cart.grand_total) %>
+  <% end %>
   <%= button_to "Empty cart", cart_empty_path, method: :delete %>
 
   <% if current_user %>
@@ -19,5 +24,16 @@
     <%= tag.div id: "item-#{item.id}" do %>
       <%= render partial: "cart_item", locals: {item: item, img_width: 150} %>
     <% end %>
+  <% end %>
+  <% if @coupon %>
+
+  <% end %>
+<% end %>
+
+<% unless @coupon %>
+  <%= form_tag(cart_path, method: :patch) do %>
+    <%= label_tag 'Coupon code' %>
+    <%= text_field_tag :coupon_code %>
+    <%= submit_tag 'Apply' %>
   <% end %>
 <% end %>
