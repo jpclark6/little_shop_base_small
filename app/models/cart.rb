@@ -56,7 +56,7 @@ class Cart
     else
       qualifying_amount = 0
     end
-    discount = qualifying_amount * 0.10
+    discount = qualifying_amount * coupon.discount
     return discount
   end
 end

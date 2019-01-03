@@ -4,6 +4,7 @@ class CreateCoupons < ActiveRecord::Migration[5.1]
       t.string :code
       t.string :coupon_type
       t.integer :status, default: 0
+      t.decimal :discount, default: 0
 
       t.timestamps
       t.references :user, foreign_key: true

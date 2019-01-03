@@ -17,7 +17,8 @@ Rails.application.routes.draw do
   get '/logout', to: 'session#destroy'
 
   post '/coupon', to: 'coupon#create'
-
+  delete '/coupon/:id', to: 'coupon#destroy', as: 'cancel_coupon'
+  
   get '/register', to: 'users#new', as: 'registration'
   resources :users, only: [:create, :update]
 
