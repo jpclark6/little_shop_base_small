@@ -70,14 +70,90 @@ describe 'as a user' do
     expect(page).to have_no_content('Coupon code')
   end
   it 'coupon is updated to used after coupon is used' do
+    fill_in :coupon_code, with: @coupon_1.code
+    click_button 'Apply'
+
+    expect(@coupon_1.status).to eq('Active')
+    click_button 'Check out'
+    expect(@coupon_1.status).to eq('Used')
   end
   it 'a used coupon cannot be used again' do
+    fill_in :coupon_code, with: @coupon_1.code
+    click_button 'Apply'
+    click_button 'Check out'
+    click_on 'Items'
+    click_on @item_1.name
+    click_button 'Add to Cart'
+    visit cart_path
+    fill_in :coupon_code, with: @coupon_1.code
+    click_button 'Apply'
+    expect(page).to have_content("Coupon has already been used")
+    expect(page).to have_content("Total: #{@item_1.price}")
   end
-  it 'a merchant can cancel a coupon' do
+  it 'a merchant can cancel an unused coupon' do
+    fill_in :coupon_code, with: @coupon_1.code
+    click_button 'Apply'
+    click_button 'Check out'
+    click_on 'Log out'
+
+    visit login_path
+    fill_in :email, with: @merchant_email
+    fill_in :password, with: @password
+    click_button 'Log in'
+    visit dashboard_path
+
+    expect(@coupon_2.status).to eq('Active')
+    within("#coupon-#{@coupon_1.id}") do
+      expect(page).to have_content('Used')
+      expect(page).to have_no_content('Cancel coupon')
+    end
+    within("#coupon-#{@coupon_2.id}") do
+      expect(page).to have_content('Active')
+      expect(page).to have_content('Cancel coupon')
+      click_on 'Cancel coupon'
+    end
+    expect(current_path).to eq(dashboard_path)
+    within("#coupon-#{@coupon_2.id}") do
+      expect(page).to have_content('Cancelled')
+      expect(page).to have_no_content('Cancel coupon')
+    end
+    expect(@coupon_2.status).to eq('Cancelled')
+
+    visit dashboard_path
+    click_on 'Generate 10% Off Coupon'
+    @coupon_2 = Coupon.last
   end
   it 'a cancelled coupon cannot be used' do
+    click_on 'Log out'
+    visit login_path
+    fill_in :email, with: @merchant_email
+    fill_in :password, with: @password
+    click_button 'Log in'
+    visit dashboard_path
+    within("#coupon-#{@coupon_1.id}") do
+      click_on 'Cancel coupon'
+    end
+    click_on 'Log out'
+
+    visit login_path
+    fill_in :email, with: @user_email
+    fill_in :password, with: @password
+    click_button 'Log in'
+    click_on 'Items'
+    click_on @item_1.name
+    click_button 'Add to Cart'
+    visit cart_path
+    fill_in :coupon_code, with: @coupon_1.code
+    click_button 'Apply'
+    expect(page).to have_content("Coupon no longer valid")
+    expect(page).to have_content("Total: #{@item_1.price}")
   end
   it 'an invalid coupon code cannot be used' do
+    fill_in :coupon_code, with: 'a4b2f1'
+    click_button 'Apply'
+    expect(page).to have_content("Coupon code not found")
+    total_pre_discount = @item_1.price + @item_2.price + @item_3.price
+    expect(page).to have_content("Total: $#{total_pre_discount}")
   end
 
 end
