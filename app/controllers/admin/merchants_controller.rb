@@ -14,6 +14,7 @@ class Admin::MerchantsController < Admin::BaseController
       @most_items_user = @merchant.most_items_user
       @most_items_user = @merchant.most_items_user
       @top_3_revenue_users = @merchant.top_3_revenue_users
+      @coupons = @merchant.coupons
       render :'merchants/show'
     end
   end

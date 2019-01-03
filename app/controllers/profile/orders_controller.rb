@@ -5,9 +5,13 @@ class Profile::OrdersController < ApplicationController
     @orders = current_user.orders
   end
 
+  def valid_coupon?(coupon)
+    coupon && coupon.status == 'Active'
+  end
+
   def create
     coupon = Coupon.find_by(code: session[:coupon_code])
-    if coupon && coupon.status == 'Active'
+    if valid_coupon?(coupon)
       discount = coupon.discount
       coupons = coupon
       coupon.update(status: 'Used')

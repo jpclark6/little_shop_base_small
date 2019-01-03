@@ -10,30 +10,37 @@ class CouponController < ApplicationController
       discount = 0.1
     elsif coupon_type == '20% off order'
       discount = 0.2
-    else
-      discount = 0
     end
-    user = current_user
+    user = User.find(coupon_type_params["id"])
     coupon_params = { code: code, coupon_type: coupon_type, discount: discount, user: user}
     Coupon.create(coupon_params)
     flash[:coupon_code] = "Created #{coupon_type} coupon code: #{code}"
-    redirect_to dashboard_path
+    if current_user.merchant?
+      redirect_to dashboard_path
+    else
+      redirect_to admin_merchant_path(user)
+    end
   end
 
   def destroy
     coupon = Coupon.find(params[:id])
     coupon.update(status: 'Cancelled')
-    redirect_to dashboard_path
+    if current_user.merchant?
+      redirect_to dashboard_path
+    else
+      user = coupon.user
+      redirect_to admin_merchant_path(user)
+    end
   end
 
   def restrict_access
-    render file: 'errors/not_found', status: 404 unless current_user && current_merchant?
+    render file: 'errors/not_found', status: 404 unless current_user && (current_merchant? || current_admin?)
   end
 
 
   private
 
   def coupon_type_params
-    params.permit('coupon')
+    params.permit('coupon', 'id')
   end
 end

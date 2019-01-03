@@ -200,5 +200,4 @@ describe 'as a user' do
     total_pre_discount = @item_1.price + @item_2.price + @item_3.price
     expect(page).to have_content("Total: $#{total_pre_discount}")
   end
-
 end
