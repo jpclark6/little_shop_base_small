@@ -34,7 +34,12 @@
 
 <%= tag.div id: 'coupons' do %>
   <h4>Create and Manage Coupons</h4>
-  <%= button_to 'Generate 10% Off Coupon', coupon_path %>
+  <%= button_to 'Generate 10% Off Coupon', coupon_path(coupon: '10% off order') %>
+  <% @merchant.coupons.each do |coupon| %>
+    <%= tag.div id: "coupon-#{coupon.id}" do %>
+      <h4>Code <%= coupon.code %> for <%= coupon.coupon_type %> is <%= coupon.status %></h4>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= tag.div id: 'statistics' do %>
