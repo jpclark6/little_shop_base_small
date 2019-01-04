@@ -68,6 +68,12 @@
     <p>You have sold <%= @qsp[:sold] %> items out of <%= @qsp[:total] %> (<%= @qsp[:percentage] %>%)</p>
   <% end %>
 
+  <div id="sold-pie"></div>
+  <h4>
+    <span id='sold-pie-sold'>Sold Items</span>
+    <span id='sold-pie-remaining'>Remaining Items</span>
+  </h4>
+
   <%= tag.div id: 'top-3-states' do %>
     <h4>Top 3 States where Items were Shipped</h4>
     <ol>
