@@ -194,11 +194,15 @@ RSpec.describe 'Merchant Dashboard page' do
           end
         end
       end
-      it 'shows top 5 items sold by quantity' do
+      it 'shows items sold vs remaining' do
         visit dashboard_path
         within '#statistics' do
           within '#quantity-sold' do
             expect(page).to have_content('You have sold 15 items out of 95 (15.79%)')
+          end
+          within '.pie-chart' do
+            expect(page).to have_content('Sold Items')
+            expect(page).to have_content('Remaining Items')
           end
         end
       end

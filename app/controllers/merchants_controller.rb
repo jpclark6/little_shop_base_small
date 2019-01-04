@@ -15,16 +15,12 @@ class MerchantsController < ApplicationController
     @top_3_cities = Order.top_3_cities
     @top_3_quantity_orders = Order.top_3_quantity_orders
 
-    # respond_to do |format|
-    #   format.js
-    # end
-    # @votes = [{"letter":@top_3_revenue_merchants[0].name, "presses":@top_3_revenue_merchants[0].revenue},
-    #           {"letter":@top_3_revenue_merchants[1].name, "presses":@top_3_revenue_merchants[1].revenue},
-    #           {"letter":@top_3_revenue_merchants[2].name, "presses":@top_3_revenue_merchants[2].revenue}]
-    # respond_to do |format|
-    #   format.html
-    #   format.json { render json: @votes }
-    # end
+    sales_by_month = OrderItem.sales_by_month
+
+    respond_to do |format|
+      format.html
+      format.json { render json: sales_by_month }
+    end
   end
 
   def show
