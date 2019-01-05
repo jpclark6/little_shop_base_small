@@ -17,6 +17,9 @@ class MerchantsController < ApplicationController
 
     sales_by_month = OrderItem.sales_by_month
 
+    sales_by_month = sales_by_month.map { |hash| hash[:sales] }
+    sales_by_month.shift
+
     respond_to do |format|
       format.html
       format.json { render json: sales_by_month }
