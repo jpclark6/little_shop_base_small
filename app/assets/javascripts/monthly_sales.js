@@ -18,7 +18,7 @@ function error() {
 }
 
 function drawBarMonthlySales(data) {
-  var chartdata = data;
+  var chartdata = data[0];
 
   console.log(chartdata)
 

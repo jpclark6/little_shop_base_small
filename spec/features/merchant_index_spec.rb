@@ -43,14 +43,6 @@ RSpec.describe 'Merchant Index Page', type: :feature do
         @oi_4 = create(:fulfilled_order_item, item: @item_3, order: @order_4, quantity: 201, price: 200, created_at: 10.minutes.ago, updated_at: 5.minute.ago)
       end
 
-=begin
-- top 3 states where any orders were shipped
-NY, WA, FL
-- top 3 cities where any orders were shipped (Springfield, MI should not be grouped with Springfield, CO)
-NYC, Seattle WA, Seattle FL
-- top 3 biggest orders by quantity of items
-2, 3, 4
-=end
       it 'shows top 3 merchants by revenue' do
         visit merchants_path
         within '#statistics' do
@@ -114,6 +106,12 @@ NYC, Seattle WA, Seattle FL
       it 'shows sales by month' do
         visit merchants_path
         within '#monthly-sales' do
+          expect(page).to have_content("")
+        end
+      end
+      it 'shows sales by merchant' do
+        visit merchants_path
+        within '#merchant-pie' do
           expect(page).to have_content("")
         end
       end

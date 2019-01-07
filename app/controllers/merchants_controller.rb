@@ -15,14 +15,12 @@ class MerchantsController < ApplicationController
     @top_3_cities = Order.top_3_cities
     @top_3_quantity_orders = Order.top_3_quantity_orders
 
-    sales_by_month = OrderItem.sales_by_month
-
-    sales_by_month = sales_by_month.map { |hash| hash[:sales] }
-    sales_by_month.shift
+    sales_by_month = OrderItem.formatted_sales_by_month
+    sales_by_merchant = User.formatted_sales_by_merchant
 
     respond_to do |format|
       format.html
-      format.json { render json: sales_by_month }
+      format.json { render json: [sales_by_month, sales_by_merchant] }
     end
   end
 

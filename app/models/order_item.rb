@@ -12,19 +12,27 @@ class OrderItem < ApplicationRecord
   }
 
   def self.sales_by_month
-    sorted_by_month = OrderItem.select("date_trunc('month', updated_at) as month, sum(quantity * price) as total_month").where(fulfilled: true).group('month').order('month')
-    hash_by_month = sorted_by_month.reduce({}) do |hash, month|
+    OrderItem.select("date_trunc('month', updated_at) as month, sum(quantity * price) as total_month")
+              .where(fulfilled: true)
+              .group('month')
+              .order('month')
+  end
+
+  def self.formatted_sales_by_month
+    hash_by_month = sales_by_month.reduce({}) do |hash, month|
       hash[month.month.strftime("%m").to_i] = month.total_month
       hash
     end
     months = Date::MONTHNAMES
-    months.map.with_index do |month, i|
+    formatted = months.map.with_index do |month, i|
       if hash_by_month.keys.index(i)
-        {'month': month, 'sales': hash_by_month.values[hash_by_month.keys.index(i)]}
+        hash_by_month.values[hash_by_month.keys.index(i)]
       else
-        {'month':month, 'sales': 0}
+        0
       end
     end
+    formatted.shift
+    formatted
   end
 
   def subtotal

@@ -76,6 +76,40 @@ RSpec.describe User, type: :model do
         aft = User.bottom_3_fulfilling_merchants[2].avg_fulfillment_time
         expect(aft[0..7]).to eq('00:01:00')
       end
+      it '.sales_by_merchant' do
+        @merchant_4, @merchant_5 = create_list(:merchant, 2)
+        @item_4 = create(:item, user: @merchant_4)
+        @order_4 = create(:order, user: @user_4)
+        @oi_5 = create(:order_item, item: @item_1, order: @order_4, quantity: 100, price: 100, created_at: 10.minutes.ago, updated_at: 9.minute.ago)
+        @oi_6 = create(:fulfilled_order_item, item: @item_4, order: @order_4, quantity: 100, price: 100, created_at: 10.minutes.ago, updated_at: 9.minute.ago)
+
+        actual = User.sales_by_merchant
+
+        expect(actual.length).to eq(3)
+        expect(actual[0]).to eq(@merchant_2)
+        expect(actual[1]).to eq(@merchant_3)
+        expect(actual[2]).to eq(@merchant_1)
+        expect(actual[0].revenue).to eq(90_000)
+        expect(actual[1].revenue).to eq(80_200)
+        expect(actual[2].revenue).to eq(10_000)
+      end
+      it '.formatted_sales_by_merchant' do
+        @merchant_4, @merchant_5 = create_list(:merchant, 2)
+        @item_4 = create(:item, user: @merchant_4)
+        @order_4 = create(:order, user: @user_4)
+        @oi_5 = create(:order_item, item: @item_1, order: @order_4, quantity: 100, price: 100, created_at: 10.minutes.ago, updated_at: 9.minute.ago)
+        @oi_6 = create(:fulfilled_order_item, item: @item_4, order: @order_4, quantity: 100, price: 100, created_at: 10.minutes.ago, updated_at: 9.minute.ago)
+
+        actual = User.formatted_sales_by_merchant
+
+        expect(actual.length).to eq(3)
+        expect(actual[0][0]).to eq(@merchant_2.name)
+        expect(actual[1][0]).to eq(@merchant_3.name)
+        expect(actual[2][0]).to eq(@merchant_1.name)
+        expect(actual[0][1]).to eq(90_000)
+        expect(actual[1][1]).to eq(80_200)
+        expect(actual[2][1]).to eq(10_000)
+      end
     end
   end
 

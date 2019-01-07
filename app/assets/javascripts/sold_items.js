@@ -1,4 +1,4 @@
-var loadSoldItemData = function(){
+var loadSoldItemDataSold = function(){
                 $.ajax({
                   type: 'GET',
                   contentType: 'application/json; charset=utf-8',
@@ -19,8 +19,8 @@ function error() {
 
 function drawPieSoldItems(data) {
   console.log(data);
-  var width = 400,
-  height = 400,
+  var width = 400;
+  height = 400;
   radius = Math.min(width, height) / 2;
   var color = d3.scaleOrdinal().range(['#0099ff',"#ff704d"]);
   var pie = d3.pie().value(function(d) { return d.quantity; })(data);
@@ -48,5 +48,5 @@ function drawPieSoldItems(data) {
 
 // load data on page load
 $(document).ready(function(){
-  loadSoldItemData();
+  loadSoldItemDataSold();
 });
