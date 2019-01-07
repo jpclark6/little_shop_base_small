@@ -200,4 +200,20 @@ describe 'as a user' do
     total_pre_discount = @item_1.price + @item_2.price + @item_3.price
     expect(page).to have_content("Total: $#{total_pre_discount}")
   end
+  it 'can see the coupon used on an order' do
+    fill_in :coupon_code, with: @coupon_1.code
+    click_button 'Apply'
+    click_button 'Check out'
+    order = Order.last
+    click_on 'Orders'
+    click_on "Order ID #{order.id}"
+    expect(page).to have_content("Coupon used successfully, code #{@coupon_1.code}, for #{@coupon_1.coupon_type}")
+  end
+  it 'can does not see info about coupons on an order that did not use a coupon' do
+    click_button 'Check out'
+    order = Order.last
+    click_on 'Orders'
+    click_on "Order ID #{order.id}"
+    expect(page).to have_no_content("Coupon used successfully")
+  end
 end
