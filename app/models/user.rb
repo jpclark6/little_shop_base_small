@@ -37,6 +37,20 @@ class User < ApplicationRecord
     merchant_fulfillment_times(:desc, 3)
   end
 
+  def self.sales_by_merchant
+    User.joins(items: {order_items: :order})
+        .select('users.*, sum(order_items.quantity * order_items.price) as revenue')
+        .where('orders.status=?', 1)
+        .order('revenue desc')
+        .group(:id)
+  end
+
+  def self.formatted_sales_by_merchant
+    sales_by_merchant.map do |merchant|
+      [merchant.name, merchant.revenue]
+    end
+  end
+
   def my_pending_orders
     Order.joins(order_items: :item)
       .where("items.merchant_id=? AND orders.status=? AND order_items.fulfilled=?", self.id, 0, false)

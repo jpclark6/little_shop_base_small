@@ -14,6 +14,14 @@ class MerchantsController < ApplicationController
     @top_3_states = Order.top_3_states
     @top_3_cities = Order.top_3_cities
     @top_3_quantity_orders = Order.top_3_quantity_orders
+
+    sales_by_month = OrderItem.formatted_sales_by_month
+    sales_by_merchant = User.formatted_sales_by_merchant
+
+    respond_to do |format|
+      format.html
+      format.json { render json: [sales_by_month, sales_by_merchant] }
+    end
   end
 
   def show
@@ -28,6 +36,14 @@ class MerchantsController < ApplicationController
     @most_items_user = @merchant.most_items_user
     @top_3_revenue_users = @merchant.top_3_revenue_users
     @coupons = @merchant.coupons
+
+    @remaining_data = [{"status":"Sold", "quantity":@qsp[:sold]},
+              {"status":"Remaining", "quantity":(@qsp[:total] - @qsp[:sold])}]
+    respond_to do |format|
+      format.html
+      format.json { render json: @remaining_data }
+    end
+
   end
 
   private

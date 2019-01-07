@@ -36,7 +36,7 @@
   <h4>Create and Manage Coupons</h4>
   <%= button_to 'Generate 10% Off Coupon', coupon_path(coupon: '10% off order', id: @merchant.id) %>
   <%= button_to 'Generate 20% Off Coupon', coupon_path(coupon: '20% off order', id: @merchant.id) %>
-  <% if @coupons %>
+  <% unless @coupons.empty? %>
     <h5>Coupons</h5>
     <%= tag.ul do %>
       <% @coupons.each do |coupon| %>
@@ -63,10 +63,19 @@
     </ol>
   <% end %>
 
+
   <%= tag.div id: 'quantity-sold' do %>
     <h4>Items Shipped as Percentage of Inventory</h4>
     <p>You have sold <%= @qsp[:sold] %> items out of <%= @qsp[:total] %> (<%= @qsp[:percentage] %>%)</p>
   <% end %>
+
+  <div class='pie-chart'>
+    <div id="sold-pie"></div>
+    <h4>
+      <span id='sold-pie-sold'>Sold Items</span>
+      <span id='sold-pie-remaining'>Remaining Items</span>
+    </h4>
+  </div>
 
   <%= tag.div id: 'top-3-states' do %>
     <h4>Top 3 States where Items were Shipped</h4>
