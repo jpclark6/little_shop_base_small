@@ -36,7 +36,7 @@
   <h4>Create and Manage Coupons</h4>
   <%= button_to 'Generate 10% Off Coupon', coupon_path(coupon: '10% off order', id: @merchant.id) %>
   <%= button_to 'Generate 20% Off Coupon', coupon_path(coupon: '20% off order', id: @merchant.id) %>
-  <% if @coupons %>
+  <% unless @coupons.empty? %>
     <h5>Coupons</h5>
     <%= tag.ul do %>
       <% @coupons.each do |coupon| %>

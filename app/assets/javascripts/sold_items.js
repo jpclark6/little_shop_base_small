@@ -28,10 +28,6 @@ function drawPieSoldItems(data) {
     .outerRadius(radius - 10)
     .innerRadius(0);
 
-  // var labelArc = d3.arc()
-  //   .outerRadius(radius - 40)
-  //   .innerRadius(radius - 40);
-
   var svg = d3.select("#sold-pie")
     .append("svg")
     .attr("width", width)
@@ -48,10 +44,6 @@ function drawPieSoldItems(data) {
     .attr("d", arc)
     .style("fill", function(d) { return color(d.data.status);});
 
-  // g.append("text")
-  //   .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-  //   .text(function(d) { return d.data.letter;})
-  //   .style("fill", "#111");
 }
 
 // load data on page load

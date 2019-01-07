@@ -19,15 +19,14 @@ function error() {
 
 function drawBarMonthlySales(data) {
   var chartdata = data;
-  // var chartdata = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,
-  //         135, 150, 165, 180, 200, 220, 240, 270, 300, 330, 370, 410
-  //       ];
+
+  console.log(chartdata)
 
   var margin = {
-    top: 30,
+    top: 50,
     right: 10,
     bottom: 30,
-    left: 50
+    left: 70
   }
 
   var height = 400 - margin.top - margin.bottom,
@@ -36,10 +35,15 @@ function drawBarMonthlySales(data) {
     barOffset = 20;
 
   var dynamicColor;
+  var dynamicText;
+
+  chartdata = chartdata.map(x => +x)
 
   var yScale = d3.scaleLinear()
     .domain([0, d3.max(chartdata)])
     .range([0, height])
+
+    console.log(d3.max(chartdata))
 
   var xScale = d3.scaleBand()
     .domain(d3.range(1, chartdata.length + 1))
@@ -49,39 +53,50 @@ function drawBarMonthlySales(data) {
     .domain([0, chartdata.length * .33, chartdata.length * .66, chartdata.length])
     .range(['#d6e9c6', '#bce8f1', '#faebcc', '#ebccd1'])
 
-  var awesome = d3.select('#monthly-sales').append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
-    .style('background', '#ffffff')
-    .append('g')
-    .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-    .selectAll('rect').data(chartdata)
-    .enter().append('rect')
-    .styles({
-      'fill': function(data, i) {
-        return colors(i);
-      },
-      'stroke': '#31708f',
-      'stroke-width': '1'
-    })
-    .attr('width', xScale.bandwidth())
-    .attr('x', function(data, i) {
-      return xScale(i);
-    })
-    .attr('height', 0)
-    .attr('y', height)
-    .on('mouseover', function(data) {
-      dynamicColor = this.style.fill;
-      d3.select(this)
-        .style('fill', '#3c763d')
-    })
+  var canvas = d3.select('#monthly-sales').append('svg')
+                  .attr('width', width + margin.left + margin.right)
+                  .attr('height', height + margin.top + margin.bottom)
+                  .style('background', '#ffffff')
+                  .append('g')
+                  .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+                  .selectAll('rect').data(chartdata)
+                  .enter().append('rect')
+                  .styles({
+                    'fill': function(data, i) {
+                      return colors(i);
+                    },
+                    'stroke': '#31708f',
+                    'stroke-width': 2
+                  })
+                  .attr('width', xScale.bandwidth())
+                  .attr('x', function(data, i) {
+                    return xScale(i);
+                  })
+                  .attr('height', 0)
+                  .attr('y', height)
+                  .on('mouseover', function(data) {
+                    dynamicColor = this.style.fill;
+                    d3.select(this)
+                      .style('fill', function() {
+                        return "hsl(" + Math.random() * 360 + ",80%,65%)";
+                      });
+                      dynamicText = d3.select('svg').append("text")
+                            .attr("x", d3.mouse(this)[0])
+                            .attr("y", d3.mouse(this)[1] + margin.top)
+                            .attr("text-anchor", "middle")
+                            .style("font", "24px times")
+                            .style("text-shadow", "3px 3px 4px white")
+                            .text('$' + data);
+                  })
+                  .on('mouseout', function(data) {
+                    d3.select(this)
+                      .style('fill', dynamicColor);
+                    dynamicText.remove();
+                  })
 
-  .on('mouseout', function(data) {
-    d3.select(this)
-      .style('fill', dynamicColor)
-  })
 
-  awesome.transition()
+
+  canvas.transition()
     .attr('height', function(data) {
       return yScale(data);
     })
@@ -91,7 +106,7 @@ function drawBarMonthlySales(data) {
     .delay(function(data, i) {
       return i * 20;
     })
-    .duration(5000)
+    .duration(2000)
     .ease(d3.easeElastic)
 
   var verticalGuideScale = d3.scaleLinear()
@@ -100,8 +115,9 @@ function drawBarMonthlySales(data) {
 
   var vAxis = d3.axisLeft(verticalGuideScale)
     .ticks(10)
+    .tickFormat(d3.format("($.0f"));
 
-  var verticalGuide = d3.select('svg').append('g')
+  var verticalGuide = d3.select('svg').append('g').style("font", "18px times")
   vAxis(verticalGuide)
   verticalGuide.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
   verticalGuide.selectAll('path')
@@ -114,10 +130,12 @@ function drawBarMonthlySales(data) {
       stroke: "#3c763d"
     })
 
-  var hAxis = d3.axisBottom(xScale)
-    .ticks(chartdata.size)
+  var month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-  var horizontalGuide = d3.select('svg').append('g')
+  var hAxis = d3.axisBottom(xScale)
+                .tickFormat(function(d, i) { return month_names[i]; })
+
+  var horizontalGuide = d3.select('svg').append('g').style("font", "18px times")
   hAxis(horizontalGuide)
   horizontalGuide.attr('transform', 'translate(' + margin.left + ', ' + (height + margin.top) + ')')
   horizontalGuide.selectAll('path')
@@ -129,110 +147,15 @@ function drawBarMonthlySales(data) {
     .styles({
       stroke: "#3c763d"
     });
+
+  d3.select('svg').append("text")
+        .attr("x", (width/2))
+        .attr("y", margin.top / 2)
+        .attr("text-anchor", "middle")
+        .style("font-size", "26px")
+        .style("text-decoration", "underline")
+        .text("Total Sales By Month");
 }
-
-// function drawBarMonthlySales(data) {
-//   console.log(data);
-//
-//   var margin = {top: 20, right: 20, bottom: 70, left: 40},
-//     width = 600 - margin.left - margin.right,
-//     height = 300 - margin.top - margin.bottom;
-//
-//   // Parse the date / time
-//   // var	parseDate = d3.time.format("%Y-%m").parse;
-//
-//   var x = d3.scaleBand().rangeRound([0, width]);
-//   // var x = d3.scaleOrdinal().rangeRound([0, width]);
-//
-//   var y = d3.scaleLinear().range([height, 0]);
-//
-//   var xAxis = d3.axisBottom(x)
-//       .ticks(10);
-//
-//   var yAxis = d3.axisLeft(y)
-//       .ticks(10);
-//
-//   var svg = d3.select("#monthly-sales")
-//               .append("svg")
-//               .attr("width", width + margin.left + margin.right)
-//               .attr("height", height + margin.top + margin.bottom)
-//               .append("g")
-//               .attr("transform",
-//                 "translate(" + margin.left + "," + margin.top + ")");
-//
-//     x.domain(data.map(function(d) { return d.date; }));
-//     y.domain([0, d3.max(data, function(d) { return d.value; })]);
-//
-//     svg.append("g")
-//         .attr("class", "x axis")
-//         .attr("transform", "translate(0," + height + ")")
-//         .call(xAxis)
-//         .selectAll("text")
-//         .style("text-anchor", "end")
-//         .attr("dx", "-.8em")
-//         .attr("dy", "-.55em")
-//         .attr("transform", "rotate(-90)" );
-//
-//     svg.append("g")
-//         .attr("class", "y axis")
-//         .call(yAxis)
-//         .append("text")
-//         .attr("transform", "rotate(-90)")
-//         .attr("y", 6)
-//         .attr("dy", ".71em")
-//         .style("text-anchor", "end")
-//         .text("Value ($)");
-//
-//   var xScale = d3.scaleBand()
-//     .domain(d3.range(0, data.length))
-//     .range([0, width])
-//
-//     svg.selectAll("bar")
-//         .data(data)
-//         .enter().append("rect")
-//         .style("fill", "steelblue")
-//         .attr("x", function(d) { return x(d.date); })
-//         .attr('width', xScale.bandwidth())
-//         .attr("y", function(d) { return y(d.value); })
-//         .attr("height", function(d) { return height - y(d.value); });
-//
-// };
-
-  // console.log(data);
-  // var width = 400,
-  // height = 400,
-  // radius = Math.min(width, height) / 2;
-  // var color = d3.scaleOrdinal().range(['#0099ff',"#ff704d"]);
-  // var pie = d3.pie().value(function(d) { return d.quantity; })(data);
-  // var arc = d3.arc()
-  //   .outerRadius(radius - 10)
-  //   .innerRadius(0);
-  //
-  // // var labelArc = d3.arc()
-  // //   .outerRadius(radius - 40)
-  // //   .innerRadius(radius - 40);
-  //
-  // var svg = d3.select("#sold-pie")
-  //   .append("svg")
-  //   .attr("width", width)
-  //   .attr("height", height)
-  //   .append("g")
-  //   .attr("transform", "translate(" + width/2 + "," + height/2 +")");
-  //
-  // var g = svg.selectAll("arc")
-  //   .data(pie)
-  //   .enter().append("g")
-  //   .attr("class", "arc");
-  //
-  // g.append("path")
-  //   .attr("d", arc)
-  //   .style("fill", function(d) { return color(d.data.status);});
-  //
-  // // g.append("text")
-  // //   .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-  // //   .text(function(d) { return d.data.letter;})
-  // //   .style("fill", "#111");
-// }
 
 // load data on page load
 $(document).ready(function(){

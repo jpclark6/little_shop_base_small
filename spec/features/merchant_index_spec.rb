@@ -111,15 +111,10 @@ NYC, Seattle WA, Seattle FL
           end
         end
       end
-    end
-    it 'shows sales by month' do
-      visit merchants_path
-      within '#statistics' do
-        within '.sales-by-month' do
-          expect(page).to have_content('Sales by Month')
-          expect(page).to have_content('January')
-          expect(page).to have_content('July')
-          expect(page).to have_content('December')
+      it 'shows sales by month' do
+        visit merchants_path
+        within '#monthly-sales' do
+          expect(page).to have_content("")
         end
       end
     end
