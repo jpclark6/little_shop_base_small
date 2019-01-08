@@ -17,7 +17,7 @@ describe 'as a merchant on my dashboard' do
     click_on 'Merchants'
     click_on @merchant.name
   end
-
+  
   it 'can generate a one time use coupon code' do
     click_on 'Generate 10% Off Coupon'
 

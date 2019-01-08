@@ -40,7 +40,7 @@ describe 'as a user' do
     click_on 'Cart:'
   end
 
-  it 'can use a 10% off coupon to check out adding many items' do
+  it 'can use a 10% off coupon to check out with discount to only merchants items' do
     total_pre_discount = @item_1.price + @item_2.price + @item_3.price
     expect(page).to have_content("Total: $#{total_pre_discount}")
     fill_in :coupon_code, with: @coupon_1.code
