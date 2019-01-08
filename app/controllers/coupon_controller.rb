@@ -6,6 +6,7 @@ class CouponController < ApplicationController
   def create
     code = SecureRandom.hex(3)
     coupon_type = coupon_type_params["coupon"]
+    discount = 0
     if coupon_type == '10% off order'
       discount = 0.1
     elsif coupon_type == '20% off order'
