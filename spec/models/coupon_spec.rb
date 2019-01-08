@@ -12,4 +12,29 @@ RSpec.describe Coupon, type: :model do
     it { should belong_to :user }
     it { should belong_to :order }
   end
+  describe 'class methods' do
+    describe '.create_coupon' do
+      before(:each) do
+        @user = create(:user, email: 'user', password: 'password')
+      end
+      it '10% off' do
+        coupon_type = '10% off order'
+        coupon = Coupon.create_coupon(coupon_type, @user)
+        expect(coupon.user).to eq(@user)
+        expect(coupon.discount).to eq(0.1)
+      end
+      it '20% off' do
+        coupon_type = '20% off order'
+        coupon = Coupon.create_coupon(coupon_type, @user)
+        expect(coupon.user).to eq(@user)
+        expect(coupon.discount).to eq(0.2)
+      end
+      it 'other invalid type' do
+        coupon_type = '30% off order'
+        coupon = Coupon.create_coupon(coupon_type, @user)
+        expect(coupon.user).to eq(@user)
+        expect(coupon.discount).to eq(0)
+      end
+    end
+  end
 end

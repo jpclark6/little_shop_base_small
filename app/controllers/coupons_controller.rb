@@ -1,22 +1,12 @@
-require 'securerandom'
-
 class CouponsController < ApplicationController
   before_action :require_admin_or_merchant, only: [:create, :destroy]
   before_action :require_default_user_or_visitor, only: [:update]
 
   def create
-    code = SecureRandom.hex(3)
     coupon_type = coupon_type_params["coupon"]
-    discount = 0
-    if coupon_type == '10% off order'
-      discount = 0.1
-    elsif coupon_type == '20% off order'
-      discount = 0.2
-    end
     user = User.find(coupon_type_params["id"])
-    coupon_params = { code: code, coupon_type: coupon_type, discount: discount, user: user}
-    Coupon.create(coupon_params)
-    flash[:success] = "Created #{coupon_type} coupon code: #{code}"
+    coupon = Coupon.create_coupon(coupon_type, user)
+    flash[:success] = "Created #{coupon.coupon_type} coupon code: #{coupon.code}"
     if current_user.merchant?
       redirect_to dashboard_path
     else
@@ -26,12 +16,12 @@ class CouponsController < ApplicationController
 
   def update
     coupon_code = params["coupon_code"]
-    session[:coupon_code] = coupon_code
     coupon = Coupon.find_by(code: coupon_code)
     if coupon
       case coupon.status
       when 'Active'
         flash[:success] = "#{coupon.coupon_type} coupon applied successfully"
+        session[:coupon_code] = coupon_code
       when 'Used'
         flash[:error] = "Coupon has already been used"
       when 'Cancelled'
