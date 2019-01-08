@@ -3,8 +3,8 @@
 <% else %>
   <% if @coupon && @coupon.status == 'Active' %>
     <h4>Total before discount: <%= number_to_currency(@cart.grand_total) %></h4>
-    <h4>Discount: - <%= number_to_currency(@cart.apply_coupon(@coupon)) %></h4>
-    <h4>Total after discount: <%= number_to_currency(@cart.grand_total - @cart.apply_coupon(@coupon)) %></h4>
+    <h4>Discount: - <%= number_to_currency(@cart.find_discount(@coupon)) %></h4>
+    <h4>Total after discount: <%= number_to_currency(@cart.coupon_grand_total(@coupon)) %></h4>
   <% else %>
     Total: <%= number_to_currency(@cart.grand_total) %>
   <% end %>

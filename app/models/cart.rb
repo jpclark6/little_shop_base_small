@@ -44,7 +44,7 @@ class Cart
     end.sum
   end
 
-  def apply_coupon(coupon)
+  def find_discount(coupon)
     qualifying_amount = 0
     if coupon && coupon.status == 'Active'
       qualifying_amount = @contents.keys.reduce(0) do |sum, item_id|
@@ -58,5 +58,9 @@ class Cart
     end
     discount = qualifying_amount * coupon.discount
     return discount
+  end
+
+  def coupon_grand_total(coupon)
+    grand_total - find_discount(coupon)
   end
 end

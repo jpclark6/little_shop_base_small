@@ -58,7 +58,6 @@ function drawPieMerchantRevenue(data) {
     .style("stroke", '#406F8C')
     .style("stroke-width", "2");
 
-
   g.append("text")
       .attr("transform", function(d) {
         return "translate(" + ( (radius - 12) * Math.sin( ((d.endAngle - d.startAngle) / 2) + d.startAngle ) ) + "," + ( -1 * (radius - 12) * Math.cos( ((d.endAngle - d.startAngle) / 2) + d.startAngle ) )  + ")"; })
