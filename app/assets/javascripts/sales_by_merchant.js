@@ -21,38 +21,40 @@ function drawPieMerchantRevenue(data) {
   data = data[1];
   console.log(data);
   console.log('loaded pie');
+
   var width = 800;
-  height = 400;
-  radius = Math.min(width, height) / 2;
-  // var color = d3.scaleOrdinal().range(['#0099ff',"#ff704d"]);
+      height = 400;
+      radius = Math.min(width, height) / 2;
+
   var color = d3.scaleLinear()
-    .domain([0, data.length * .33, data.length * .66, data.length])
-    .range(['#39a342', '#CBDAE5', '#BBAFAD', '#E89B40'])
-  var pie = d3.pie().value(function(d) { return d[1]; })(data);
+                .domain([0, data.length * .33, data.length * .66, data.length])
+                .range(['#39a342', '#CBDAE5', '#BBAFAD', '#E89B40'])
+
+  var pie = d3.pie()
+              .value(function(d) { return d[1]; })(data);
+
   var arc = d3.arc()
-    .outerRadius(radius - 10)
-    .innerRadius(0);
+            .outerRadius(radius - 10)
+            .innerRadius(0);
 
   var dynamicColor;
   var dynamicText;
 
   var svg = d3.select("#merchant-pie")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(" + width/2 + "," + height/2 +")");
-
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height)
+              .append("g")
+              .attr("transform", "translate(" + width/2 + "," + height/2 +")");
 
   var g = svg.selectAll("arc")
-    .data(pie)
-    .enter().append("g")
-    .attr("class", "arc");
+            .data(pie)
+            .enter().append("g")
+            .attr("class", "arc");
 
   g.append("path")
-    .attr("d", arc)
-    .style("fill", function(d, i) { return color(i);});
-
+      .attr("d", arc)
+      .style("fill", function(d, i) { return color(i);});
 
   g.append("text")
       .attr("transform", function(d) {
@@ -72,11 +74,8 @@ function drawPieMerchantRevenue(data) {
       })
       .text(function(d) {
         return d.data[0] + " at $" + parseInt(d.data[1], 10); });
-
-
 }
 
-// load data on page load
 $(document).ready(function(){
   loadSoldItemDataMerchants();
 });

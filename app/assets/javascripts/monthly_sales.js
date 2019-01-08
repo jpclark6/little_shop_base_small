@@ -19,7 +19,6 @@ function error() {
 
 function drawBarMonthlySales(data) {
   var chartdata = data[0];
-
   console.log(chartdata)
 
   var margin = {
@@ -40,18 +39,16 @@ function drawBarMonthlySales(data) {
   chartdata = chartdata.map(x => +x)
 
   var yScale = d3.scaleLinear()
-    .domain([0, d3.max(chartdata)])
-    .range([0, height])
-
-    console.log(d3.max(chartdata))
+                  .domain([0, d3.max(chartdata)])
+                  .range([0, height])
 
   var xScale = d3.scaleBand()
-    .domain(d3.range(1, chartdata.length + 1))
-    .range([0, width])
+                  .domain(d3.range(1, chartdata.length + 1))
+                  .range([0, width])
 
   var colors = d3.scaleLinear()
-    .domain([0, chartdata.length * .33, chartdata.length * .66, chartdata.length])
-    .range(['#d6e9c6', '#bce8f1', '#faebcc', '#ebccd1'])
+                  .domain([0, chartdata.length * .33, chartdata.length * .66, chartdata.length])
+                  .range(['#d6e9c6', '#bce8f1', '#faebcc', '#ebccd1'])
 
   var canvas = d3.select('#monthly-sales').append('svg')
                   .attr('width', width + margin.left + margin.right)
@@ -97,25 +94,25 @@ function drawBarMonthlySales(data) {
 
 
   canvas.transition()
-    .attr('height', function(data) {
-      return yScale(data);
-    })
-    .attr('y', function(data) {
-      return height - yScale(data);
-    })
-    .delay(function(data, i) {
-      return i * 20;
-    })
-    .duration(2000)
-    .ease(d3.easeElastic)
+        .attr('height', function(data) {
+          return yScale(data);
+        })
+        .attr('y', function(data) {
+          return height - yScale(data);
+        })
+        .delay(function(data, i) {
+          return i * 20;
+        })
+        .duration(2000)
+        .ease(d3.easeElastic)
 
   var verticalGuideScale = d3.scaleLinear()
-    .domain([0, d3.max(chartdata)])
-    .range([height, 0])
+                              .domain([0, d3.max(chartdata)])
+                              .range([height, 0])
 
   var vAxis = d3.axisLeft(verticalGuideScale)
-    .ticks(10)
-    .tickFormat(d3.format("($.0f"));
+                .ticks(10)
+                .tickFormat(d3.format("($.0f"));
 
   var verticalGuide = d3.select('svg').append('g').style("font", "18px times")
   vAxis(verticalGuide)
@@ -157,7 +154,6 @@ function drawBarMonthlySales(data) {
         .text("Total Sales By Month");
 }
 
-// load data on page load
 $(document).ready(function(){
   loadSoldMonthlyData();
 });
