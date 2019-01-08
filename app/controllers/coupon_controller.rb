@@ -6,6 +6,7 @@ class CouponController < ApplicationController
   def create
     code = SecureRandom.hex(3)
     coupon_type = coupon_type_params["coupon"]
+    discount = 0
     if coupon_type == '10% off order'
       discount = 0.1
     elsif coupon_type == '20% off order'
@@ -14,7 +15,7 @@ class CouponController < ApplicationController
     user = User.find(coupon_type_params["id"])
     coupon_params = { code: code, coupon_type: coupon_type, discount: discount, user: user}
     Coupon.create(coupon_params)
-    flash[:coupon_code] = "Created #{coupon_type} coupon code: #{code}"
+    flash[:success] = "Created #{coupon_type} coupon code: #{code}"
     if current_user.merchant?
       redirect_to dashboard_path
     else
@@ -25,6 +26,7 @@ class CouponController < ApplicationController
   def destroy
     coupon = Coupon.find(params[:id])
     coupon.update(status: 'Cancelled')
+    flash[:error] = "Coupon #{coupon.code} cancelled"
     if current_user.merchant?
       redirect_to dashboard_path
     else
@@ -36,7 +38,6 @@ class CouponController < ApplicationController
   def restrict_access
     render file: 'errors/not_found', status: 404 unless current_user && (current_merchant? || current_admin?)
   end
-
 
   private
 
