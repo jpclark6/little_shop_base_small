@@ -8,25 +8,6 @@ class CartController < ApplicationController
     @coupon = Coupon.find_by(code: session[:coupon_code])
   end
 
-  def update
-    coupon_code = params["coupon_code"]
-    session[:coupon_code] = coupon_code
-    coupon = Coupon.find_by(code: coupon_code)
-    if coupon
-      case coupon.status
-      when 'Active'
-        flash[:success] = "#{coupon.coupon_type} coupon applied successfully"
-      when 'Used'
-        flash[:error] = "Coupon has already been used"
-      when 'Cancelled'
-        flash[:error] = "Coupon no longer valid"
-      end
-    else
-      flash[:error] = "Coupon code not found"
-    end
-    redirect_to cart_path
-  end
-
   def add_item
     add_item_to_cart(params[:id])
     redirect_to items_path

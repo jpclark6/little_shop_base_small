@@ -31,7 +31,7 @@
 <% end %>
 
 <% unless @coupon %>
-  <%= form_tag(cart_path, method: :patch) do %>
+  <%= form_tag(add_coupon_path, method: :patch) do %>
     <%= label_tag 'Coupon code' %>
     <%= text_field_tag :coupon_code %>
     <%= submit_tag 'Apply' %>
