@@ -15,14 +15,14 @@ class CartController < ApplicationController
     if coupon
       case coupon.status
       when 'Active'
-        flash[:coupon] = "#{coupon.coupon_type} coupon applied successfully"
+        flash[:success] = "#{coupon.coupon_type} coupon applied successfully"
       when 'Used'
-        flash[:coupon] = "Coupon has already been used"
+        flash[:error] = "Coupon has already been used"
       when 'Cancelled'
-        flash[:coupon] = "Coupon no longer valid"
+        flash[:error] = "Coupon no longer valid"
       end
     else
-      flash[:coupon] = "Coupon code not found"
+      flash[:error] = "Coupon code not found"
     end
     redirect_to cart_path
   end

@@ -209,7 +209,7 @@ describe 'as a user' do
     click_on "Order ID #{order.id}"
     expect(page).to have_content("Coupon used successfully, code #{@coupon_1.code}, for #{@coupon_1.coupon_type}")
   end
-  it 'can does not see info about coupons on an order that did not use a coupon' do
+  it 'does not see info about coupons on an order that did not use a coupon' do
     click_button 'Check out'
     order = Order.last
     click_on 'Orders'

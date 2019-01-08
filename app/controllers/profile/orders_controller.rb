@@ -13,9 +13,8 @@ class Profile::OrdersController < ApplicationController
     coupon = Coupon.find_by(code: session[:coupon_code])
     if valid_coupon?(coupon)
       discount = coupon.discount
-      coupons = coupon
       coupon.update(status: 'Used')
-      order = Order.create(user: current_user, status: :pending, coupons: [coupons])
+      order = Order.create(user: current_user, status: :pending, coupon: coupon)
     else
       discount = 0
       order = Order.create(user: current_user, status: :pending)

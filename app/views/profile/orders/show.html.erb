@@ -10,10 +10,10 @@
   <p><%= button_to 'Cancel Order', profile_order_path(@order), method: :delete %></p>
   <% end %>
 
-  <% unless @order.coupons.empty? %>
-    <p>Coupon used successfully, code <%= @order.coupons.first.code %>, for <%= @order.coupons.first.coupon_type %>.</p>
+  <% if @order.coupon %>
+    <p>Coupon used successfully, code <%= @order.coupon.code %>, for <%= @order.coupon.coupon_type %>.</p>
   <% end %>
-  
+
   <% @order.order_items.each do |oitem| %>
     <%= tag.div id: "oitem-#{oitem.id}" do %>
       <%= render partial: "/profile/orders/order_item", locals: {oitem: oitem, img_width: 150} %>
