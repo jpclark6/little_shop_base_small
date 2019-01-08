@@ -153,3 +153,20 @@
   }
   margin-bottom: 50px;
 }
+
+#coupons {
+  border: 1px dashed darkgrey;
+  border-radius: 8px;
+  margin: 20px 5px;
+  padding: 10px;
+  width: 500px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  .button_to {
+    margin: 4px 50px;
+  }
+}
+
+svg {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 15px;
+}

@@ -51,7 +51,9 @@ function drawPieMerchantRevenue(data) {
 
   g.append("path")
     .attr("d", arc)
-    .style("fill", function(d, i) { return color(i);});
+    .style("fill", function(d, i) { return color(i);})
+    .style("stroke", '#406F8C')
+    .style("stroke-width", "2");
 
 
   g.append("text")
@@ -70,6 +72,8 @@ function drawPieMerchantRevenue(data) {
           return "end";
         }
       })
+      .style("font", "18px times")
+      .style("text-shadow", "3px 3px 4px white")
       .text(function(d) {
         return d.data[0] + " at $" + parseInt(d.data[1], 10); });
 
