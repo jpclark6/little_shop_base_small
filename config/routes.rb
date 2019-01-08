@@ -10,13 +10,13 @@ Rails.application.routes.draw do
   delete '/cart', to: 'cart#destroy', as: 'cart_empty'
   delete '/cart/item/:id', to: 'cart#remove_more_item', as: 'cart_remove_more_item'
   delete '/cart/item/:id/all', to: 'cart#remove_all_of_item', as: 'cart_remove_item_all'
-  patch '/cart', to: 'coupons#update', as: 'add_coupon'
 
   get '/login', to: 'session#new'
   post '/login', to: 'session#create'
   get '/logout', to: 'session#destroy'
 
   post '/coupon', to: 'coupons#create'
+  patch '/coupon', to: 'coupons#update', as: 'add_coupon'
   delete '/coupon/:id', to: 'coupons#destroy', as: 'cancel_coupon'
 
   get '/register', to: 'users#new', as: 'registration'
